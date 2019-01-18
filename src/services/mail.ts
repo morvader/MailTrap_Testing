@@ -36,6 +36,7 @@ class Mail {
             result = 'Envio OK';
         }).catch((err) => {
             console.log(err);
+            result = err.response;
         });
         return result;
         // transporter.sendMail(mailOptions, (error, info) => {
