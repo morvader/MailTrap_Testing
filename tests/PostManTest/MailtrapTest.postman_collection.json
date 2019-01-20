@@ -1,0 +1,359 @@
+{
+	"info": {
+		"_postman_id": "b6c2c662-c87d-4097-8887-a39558b94e3e",
+		"name": "MailtrapTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Server ACK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "67050756-c103-433a-b8fd-a144aef7994d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3030",
+					"host": [
+						"localhost"
+					],
+					"port": "3030"
+				}
+			},
+			"response": [
+				{
+					"name": "Server ACK",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:3030",
+							"host": [
+								"localhost"
+							],
+							"port": "3030"
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "34"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"22-lglZhY1zL3QLrluZUJtfnePUmzs\""
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 16 Jan 2019 08:42:23 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"result\": \"Testing MailTrap: ACK\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Mailtrap: CleanInbox",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "db022b83-b113-4c8e-ac84-f2930c649252",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Your test name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.emails_count).to.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "api-token",
+						"value": "{{UserToken}}",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://mailtrap.io/api/v1/inboxes/:inboxId/clean",
+					"protocol": "https",
+					"host": [
+						"mailtrap",
+						"io"
+					],
+					"path": [
+						"api",
+						"v1",
+						"inboxes",
+						":inboxId",
+						"clean"
+					],
+					"variable": [
+						{
+							"key": "inboxId",
+							"value": "{{InboxId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "67050756-c103-433a-b8fd-a144aef7994d",
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "302e27e7-0191-4217-9942-6d455742fe61",
+						"exec": [
+							"var timestamp = new Date();",
+							"",
+							"console.log(timestamp.valueOf());",
+							"pm.globals.set(\"SubjectEmail\", \"PruebaEnvio_\" + timestamp.valueOf());",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"from\": \"fran@test.com\",\n    \"to\": \"mailtrap@sngular.com\",\n    \"subject\": \"{{SubjectEmail}}\",\n    \"message\": \"<p>Prueba de envío de correo</p>\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3030",
+					"host": [
+						"localhost"
+					],
+					"port": "3030"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MailTrap: GetUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "26b4d95a-f99d-4163-8389-78a97d68a259",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Api-Token",
+						"value": "{{UserToken}}",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://mailtrap.io/api/v1/user",
+					"protocol": "https",
+					"host": [
+						"mailtrap",
+						"io"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MailTrap: GetInboxes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0bc82d57-096e-4eb6-b466-aed17f01c0a8",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.globals.set(\"InboxId\",jsonData[0].id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Api-token",
+						"value": "{{UserToken}}",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://mailtrap.io/api/v1/inboxes",
+					"protocol": "https",
+					"host": [
+						"mailtrap",
+						"io"
+					],
+					"path": [
+						"api",
+						"v1",
+						"inboxes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MailTrap: GetMessages",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "db022b83-b113-4c8e-ac84-f2930c649252",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Correct Subject Email\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[0].subject).to.eql(pm.globals.get(\"SubjectEmail\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "api-token",
+						"value": "{{UserToken}}",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://mailtrap.io/api/v1/inboxes/:inboxId/messages",
+					"protocol": "https",
+					"host": [
+						"mailtrap",
+						"io"
+					],
+					"path": [
+						"api",
+						"v1",
+						"inboxes",
+						":inboxId",
+						"messages"
+					],
+					"variable": [
+						{
+							"key": "inboxId",
+							"value": "{{InboxId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

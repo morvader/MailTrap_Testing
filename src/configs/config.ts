@@ -1,4 +1,4 @@
-import crendentials from './crendentials';
+import crendentials from './credentials';
 
 class Configs {
     public host = 'smtp.mailtrap.io';
