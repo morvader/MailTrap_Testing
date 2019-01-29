@@ -175,3 +175,5 @@ Running the server:
 * npm run build-ts only compiles the application
 * npm run serve (npm run start) only starts the application
 * npm run test run the tests: Send an email an verification
+
+El ejemplo completo está disponible en [**GitHub**](https://github.com/morvader/MailTrap_Testing)
