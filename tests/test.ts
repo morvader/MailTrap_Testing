@@ -13,7 +13,7 @@ describe('MailTrap Testing Suite', function () {
   beforeEach((done) => {
     console.log('Clean Inbox');
 
-    const options = {
+    const cleanInbox = {
       url: mailtrapUrl + 'inboxes/' + inboxId + '/clean',
       headers: {
         'Api-Token': apiToken
@@ -21,15 +21,12 @@ describe('MailTrap Testing Suite', function () {
     };
 
     function callback(error, response, body) {
-      console.log('callback');
-      if (!error && response.statusCode == 200) {
-        const info = JSON.parse(body);
-        //console.log(info);
-      }
+      console.log('Empty Inbox');
+      expect(response.statusCode).toBe(200);
       done();
     }
 
-    api.patch(options, callback);
+    api.patch(cleanInbox, callback);
   });
 
   it('Server is running - ACK', (done) => {
@@ -44,36 +41,17 @@ describe('MailTrap Testing Suite', function () {
       });
   });
 
-  it('Get User', (done) => {
-    const getUser = {
-      url: mailtrapUrl + 'user/',
-      headers: {
-        'Api-Token': apiToken
-      }
-    };
-
-    let cb = function callback(error, response, body) {
-      const info = JSON.parse(body);
-      expect(response.statusCode).toBe(200);
-      expect(info.api_token).toBe(apiToken);
-      done();
-    }
-    api.get(getUser, cb);
-  });
-
   it('Send mail from app', (done) => {
     let timestamp = new Date();
 
-    //console.log(timestamp.valueOf());
     let subjectText = "PruebaEnvio_" + timestamp.valueOf();
-    let body ={
+    let body = {
       from: 'TestMail@test.com',
       to: 'fran@test.com',
       subject: subjectText,
       message: 'Send Test'
     };
    
-
     const getEmails = {
       url: mailtrapUrl + 'inboxes/' + inboxId + '/messages',
       headers: {
@@ -96,8 +74,7 @@ describe('MailTrap Testing Suite', function () {
       .expect(200)
       .end(()=>{
         console.log("Email sent");
-        api.get(getEmails, cb);
-        
+        api.get(getEmails, cb);   
       });
       
      
