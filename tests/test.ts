@@ -44,6 +44,8 @@ describe('MailTrap Testing Suite', function () {
   it('Send mail from app', (done) => {
     let timestamp = new Date();
 
+    //Adjuntamos en TimeStamp en el asunto para tener controlado el email concreto 
+    //sobre el que hacemos la pruebas
     let subjectText = "PruebaEnvio_" + timestamp.valueOf();
     let body = {
       from: 'TestMail@test.com',
@@ -51,33 +53,33 @@ describe('MailTrap Testing Suite', function () {
       subject: subjectText,
       message: 'Send Test'
     };
-   
-    const getEmails = {
+
+    //Pedimos a nuestro servidor que envie el correo
+    request(app.app)
+      .post('/')
+      .send(body)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200) //Comprobamos que nuestro servidor responde correctamente
+      .end(() => {
+        console.log("Email sent");
+        //Una vez finalizada la petición pasamos a comprobar en mailtrap que está el email enviado
+        api.get(getEmailsEndPoint, checkMail);
+      });
+
+    const getEmailsEndPoint = {
       url: mailtrapUrl + 'inboxes/' + inboxId + '/messages',
       headers: {
         'Api-Token': apiToken
       },
     };
 
-    let cb = function callback(error, response, body) {
+    let checkMail = function callback(error, response, body) {
       const info = JSON.parse(body);
       expect(response.statusCode).toBe(200);
       expect(info[0].subject).toBe(subjectText);
       done();
     }
-   
-    request(app.app)
-      .post('/')
-      .send(body)
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(()=>{
-        console.log("Email sent");
-        api.get(getEmails, cb);   
-      });
-      
-     
   });
 
 });

@@ -39,14 +39,6 @@ class Mail {
             result = err.response;
         });
         return result;
-        // transporter.sendMail(mailOptions, (error, info) => {
-        //     if (error) {
-        //        console.log('Error envio: ' + error);
-        //     } else {
-        //         console.log('Envio OK: ' + info);
-        //         result = 'Message delivered';
-        //     }
-        // });
 
     }
 
